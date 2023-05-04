@@ -1,0 +1,336 @@
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=JetBrains+Mono">
+  <link rel="stylesheet" href="custom.css">
+  <style>
+    /* 添加一个提交过的题目按钮样式 */
+    .problem-link-submitted {
+      background-color: green; /* 设置背景颜色为绿色 */
+    }
+    /* 添加一个下载按钮样式 */
+    .download-button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: #333333;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* 自定义样式文件 */
+    .CodeMirror {
+      font-family: "JetBrains Mono", monospace; /* 设置字体样式 */
+      font-size: 20px; /* 设置字体大小 */
+    }
+
+    .language-select {
+      position: relative; /* 设置相对定位 */
+      top: 10px; /* 设置距离顶部10px */
+      left: calc(50% - 50px); /* 设置距离左边为50%减去宽度的一半 */
+      width: 100px; /* 设置宽度为100px */
+    }
+
+    .problem-link:hover {
+      color: #ffffff; /* 设置悬停时的链接颜色为白色 */
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333333;
+    }
+
+    .problem {
+      border: 2px solid #cccccc;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px;
+      box-shadow: 2px 2px 5px #999999;
+    }
+
+    .problem-title {
+      font-weight: bold;
+      font-size: 20px;
+      color: #333333;
+    }
+
+    .problem-description {
+      font-style: italic;
+      font-size: 16px;
+      color: #666666;
+    }
+
+    .code-input {
+      width: 80%;
+      height: 200px;
+      margin-left: auto;
+      /* 添加这个属性，让文本框居中对齐 */
+      font-family: monospace;
+      border: 2px solid #cccccc;
+      border-radius: 10px;
+      padding: 10px;
+      resize: none;
+    }
+
+    .submit-button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .logo {
+      display: block;
+      width: 100px;
+      height: 100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 添加一个列表样式 */
+    .problem-list {
+      list-style-type: none;
+      padding-left: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 添加一个列表项样式 */
+    .problem-item {
+      margin: 10px;
+    }
+
+    /* 添加一个链接样式 */
+    .problem-link {
+      text-decoration: none;
+      color: #333333;
+      font-size: 18px;
+      padding: 10px;
+      border: 2px solid #cccccc;
+      border-radius: 10px;
+      background-color: #ffffff;
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* 添加一个链接悬停样式 */
+    .problem-link:hover {
+      color: #ffffff;
+      /*background-color: background-color: #333333;*/
+      /* 设置悬停时的链接背景颜色 */
+    }
+
+    /* 添加一个下拉菜单样式 */
+    .language-select {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      border: 2px solid #cccccc;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+  </style>
+
+  <!-- 引入CodeMirror库的脚本文件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
+  <!-- 引入CodeMirror库的样式文件 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
+  <!-- 引入CodeMirror库的不同语言模式的脚本文件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/python/python.min.js"></script>
+  <title></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/clike/clike.min.js"></script>
+</head>
+<body>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/240px-JavaScript-logo.png"
+     alt="JavaScript Logo" class="logo">
+<h1>程序设计竞赛</h1>
+
+<!-- 添加一个列表元素，显示题目标题 -->
+<ul class="problem-list" id="problem-list">
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(1)">1</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(2)">2</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(3)">3</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(4)">4</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(5)">5</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(6)">6</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(7)">7</a></li>
+  <li class="problem-item"><a href="#" class="problem-link" onclick="showProblem(8)">8</a></li>
+</ul>
+
+<!-- 添加一个隐藏的div元素，用于显示当前选择的题目 -->
+<!--<div class="problem" id="current-problem" style="display:none;">-->
+<!--    <div class="problem-title" id="current-problem-title"></div>-->
+<!--    <div class="problem-description" id="current-problem-description"></div>-->
+<!--</div>-->
+<!-- 添加一个下载按钮元素 -->
+<a href="https://tntfiles.com/download/68c5cb9067cb8272896ac1ac9f3e0b88f3ed9e5b9853b1792627eb6af6895c0b/%E8%AF%BE%E4%BB%B6(4).pdf?1683207750.5329"
+   class="download-button">下载题目</a>
+<!-- 添加一个隐藏的文本框元素，用于输入当前选择的题目的代码 -->
+<!-- 修改为一个div元素，用于创建CodeMirror编辑器 -->
+<div id="code-input" style="display:none;"></div>
+
+<!-- 添加一个隐藏的按钮元素，用于提交当前选择的题目的代码 -->
+<button class="submit-button" id="submit-button" onclick="submitCode()" style="display:none;">提交</button>
+
+<!-- 添加一个隐藏的下拉菜单元素，用于选择编程语言 -->
+<label for="language-select"></label>
+<select id="language-select" class="language-select" style="display:none;" onchange="changeLanguage()">
+  <option value="python">Python</option>
+  <option value="java">Java</option>
+  <option value="text/x-c++src">C++</option>
+</select>
+
+<script>
+  // 这个函数用于将用户的代码发送到后端服务器
+  function submitCode() {
+
+    // 获取用户输入的代码
+    // 修改为从CodeMirror编辑器中获取代码
+    var code = editor.getValue();
+
+    // 创建一个XMLHttpRequest对象
+    var xhr = new XMLHttpRequest();
+
+    // 设置请求方法和地址
+    xhr.open("POST", "https://example.com/submit");
+
+    // 设置请求头，指定内容类型为文本
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // 设置请求成功时的回调函数
+    xhr.onload = function () {
+      // 如果状态码为200，表示请求成功
+      if (xhr.status === 200) {
+        // 获取服务器返回的数据，假设是一个JSON字符串
+        var data = xhr.responseText;
+
+        // 解析JSON字符串为对象
+        var result = JSON.parse(data);
+
+        // 显示结果
+        alert("你的得分是：" + result.score + "\n" + "反馈信息是：" + result.feedback);
+      } else {
+        // 如果状态码不为200，表示请求失败
+        alert("请求失败：" + xhr.statusText);
+      }
+    };
+
+    // 设置请求失败时的回调函数
+    xhr.onerror = function () {
+      alert("请求出错");
+    };
+
+    // 发送请求，附上用户输入的代码
+    xhr.send(code);
+  }
+
+  // 这个函数用于显示用户选择的题目
+  // function showProblem(index) {
+  //
+  //     // 定义一个数组，存储所有题目的标题和描述
+  //     var problems = [{
+  //         title: "题目一：计算两个数的最大公约数",
+  //         description: "给定两个正整数a和b，编写一个函数gcd(a,b)，返回它们的最大公约数。"
+  //     },
+  //         {
+  //             title: "题目二：判断一个数是否为素数",
+  //             description: "给定一个正整数n，编写一个函数isPrime(n)，返回它是否为素数。"
+  //         },
+  //         {
+  //             title: "题目三：计算斐波那契数列第n项",
+  //             description: "给定一个正整数n，编写一个函数fib(n)，返回斐波那契数列第n项。"
+  //         },
+  //         {
+  //             title: "题目四：反转一个字符串",
+  //             description: "给定一个字符串s，编写一个函数reverse(s)，返回它反转后的字符串。"
+  //         },
+  //         {
+  //             title: "题目五：找出数组中最大的元素",
+  //             description: "给定一个数组arr，编写一个函数max(arr)，返回它中最大的元素。"
+  //         },
+  //         {
+  //             title: "题目六：排序一个数组",
+  //             description: "给定一个数组arr，编写一个函数sort(arr)，返回它按照从小到大的顺序排序后的数组。"
+  //         },
+  //         {
+  //             title: "题目七：实现一个栈",
+  //             description: "使用JavaScript语言实现一个栈结构，具有以下方法：push(x) 将元素x压入栈顶；pop() 弹出并返回栈顶元素；peek() 返回栈顶元素但不弹出；isEmpty() 返回栈是否为空。"
+  //         },
+  //         {
+  //             title: "题目八：实现一个队列",
+  //             description: "使用JavaScript语言实现一个队列结构，具有以下方法：enqueue(x) 将元素x加入队尾；dequeue() 出队并返回队首元素；front() 返回队首元素但不出队；isEmpty() 返回队列是否为空。"
+  //         }
+  //     ];
+  //
+  //     // 获取当前选择的题目对象
+  //     var problem = problems[index - 1];
+  //
+  //     // 获取网页上需要更新的元素
+  //     var currentProblem = document.getElementById("current-problem");
+  //     var currentProblemTitle = document.getElementById("current-problem-title");
+  //     var currentProblemDescription = document.getElementById("current-problem-description");
+  //     var codeInput = document.getElementById("code-input");
+  //     var submitButton = document.getElementById("submit-button");
+  //     var languageSelect = document.getElementById("language-select");
+  //
+  //     // 更新元素的内容和样式
+  //     currentProblemTitle.innerHTML = problem.title;
+  //     currentProblemDescription.innerHTML = problem.description;
+  //     editor.setValue(""); // 清空编辑器
+  //     currentProblem.style.display = "block"; // 显示题目元素
+  //     codeInput.style.display = "block"; // 显示编辑器元素
+  //     submitButton.style.display = "block"; // 显示按钮元素
+  //     languageSelect.style.display = "block"; // 显示下拉菜单元素
+  // }
+  //
+  // // 这个函数用于创建CodeMirror编辑器
+  // function createEditor() {
+  //
+  //     // 获取网页上需要创建编辑器的元素
+  //     var codeInput = document.getElementById("code-input");
+  //
+  //     // 调用CodeMirror库的方法，创建一个编辑器对象，并且传入一些配置参数
+  //     // 返回编辑器对象
+  //     return CodeMirror(codeInput, {
+  //         mode: "javascript", // 设置初始语言模式为JavaScript
+  //         lineNumbers: true, // 显示行号
+  //         indentUnit: 4, // 设置缩进单位为4个空格
+  //         indentWithTabs: true, // 使用制表符进行缩进
+  //         autoCloseBrackets: true, // 自动补全括号
+  //         matchBrackets: true, // 高亮匹配的括号   styleActiveLine: true, // 高亮当前行
+  //         theme: "default" // 设置主题样式为默认
+  //     });
+  // }
+
+  // 这个函数用于根据用户选择的编程语言，改变CodeMirror编辑器的模式
+  function changeLanguage() {
+
+    // 获取网页上需要更新的元素
+    var languageSelect = document.getElementById("language-select");
+
+    // 获取用户选择的编程语言
+    var language = languageSelect.value;
+
+    // 根据用户选择的编程语言，设置CodeMirror编辑器的模式
+    editor.setOption("mode", language);
+  }
+
+  // 调用创建编辑器的函数，得到一个编辑器对象
+  var editor = createEditor();
+</script>
+</body>
+</html>

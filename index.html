@@ -1,0 +1,341 @@
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=JetBrains+Mono">
+    <link rel="stylesheet" href="custom.css">
+    <style>
+        /* 添加一个下载按钮样式 */
+        .download-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background-color: #333333;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .language-select {
+            position: relative; /* 设置相对定位 */
+            top: 10px; /* 设置距离顶部10px */
+            left: calc(50% - 50px); /* 设置距离左边为50%减去宽度的一半 */
+            width: 100px; /* 设置宽度为100px */
+        }
+
+        .problem-link:hover {
+            color: #ffffff; /* 设置悬停时的链接颜色为白色 */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+
+        .submit-button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .logo {
+            display: block;
+            width: 100px;
+            height: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 添加一个列表样式 */
+        .problem-list {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* 添加一个列表项样式 */
+        .problem-item {
+            margin: 10px;
+        }
+
+        /* 添加一个链接样式 */
+        .problem-link {
+            text-decoration: none;
+            color: #333333;
+            font-size: 18px;
+            padding: 10px;
+            border: 2px solid #cccccc;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 添加一个链接悬停样式 */
+        .problem-link:hover {
+            color: #ffffff;
+            background-color: #333333; /* 设置悬停时的链接背景颜色 */
+        }
+
+        /* 添加一个下拉菜单样式 */
+        .language-select {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            border: 2px solid #cccccc;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+    </style>
+
+    <!-- 引入CodeMirror库的脚本文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"></script>
+    <!-- 引入CodeMirror库的样式文件 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.css">
+    <!-- 引入CodeMirror库的不同语言模式的脚本文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/javascript/javascript.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/python/python.min.js"></script>
+    <title>程序设计竞赛</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/mode/clike/clike.min.js"></script>
+
+</head>
+<body>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/240px-JavaScript-logo.png"
+     alt="JavaScript Logo" class="logo">
+<h1>程序设计竞赛</h1>
+
+<!-- 添加一个列表元素，显示题目标题 -->
+<ul class="problem-list" id="problem-list">
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(1)">1</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(2)">2</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(3)">3</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(4)">4</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(5)">5</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(6)">6</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(7)">7</a></li>
+    <li class="problem-item"><a href="javascript:void(0)" class="problem-link" onclick="showProblem(8)">8</a></li>
+</ul>
+
+<!-- 添加一个下载按钮元素 -->
+<a href="#"
+   class="download-button">下载题目</a>
+<!-- 添加一个隐藏的文本框元素，用于输入当前选择的题目的代码 -->
+<!-- 修改为一个div元素，用于创建CodeMirror编辑器 -->
+<div id="code-input" style="display:block;"></div>
+
+
+<!-- 添加一个隐藏的按钮元素，用于提交当前选择的题目的代码 -->
+<button class="submit-button" id="submit-button" onclick="submitCode()" style="display:block;">提交</button>
+
+<!-- 添加一个隐藏的下拉菜单元素，用于选择编程语言 -->
+<label for="language-select"></label>
+<select id="language-select" class="language-select" style="display:block;" onchange="changeLanguage()">
+    <option value="">请选择编程语言</option>
+    <option value="text/x-csrc">C</option>
+    <option value="text/x-c++src">C++</option>
+    <option value="java">Java</option>
+    <option value="python">Python</option>
+</select>
+
+<script>
+    // 这个函数用于将用户的代码发送到后端服务器
+    function submitCode() {
+
+        // 获取用户输入的代码
+        // 修改为从CodeMirror编辑器中获取代码
+        var code = editor.getValue();
+
+        // 创建一个XMLHttpRequest对象
+        var xhr = new XMLHttpRequest();
+
+        // 设置请求方法和地址
+        xhr.open("POST", "https://example.com/submit");
+
+        // 设置请求头，指定内容类型为文本
+        xhr.setRequestHeader("Content-Type", "text/plain");
+
+        // 设置请求成功时的回调函数
+        xhr.onload = function () {
+            // 如果状态码为200，表示请求成功
+            if (xhr.status === 200) {
+                // 获取服务器返回的数据，假设是一个JSON字符串
+                var data = xhr.responseText;
+
+                // 解析JSON字符串为对象
+                var result = JSON.parse(data);
+
+                // 显示结果
+                alert("你的得分是：" + result.score + "\n" + "反馈信息是：" + result.feedback);
+
+                // 获取当前选择的题目序号
+                var problemNumber = document.getElementById("current-problem").value;
+
+                // 获取当前选择的题目序号按钮
+                var problemButton = document.getElementById("button-" + problemNumber);
+
+                // 改变题目序号按钮的样式，表示已经提交过
+                problemButton.style.backgroundColor = "green";
+
+                // 隐藏CodeMirror编辑器、下拉菜单和提交按钮
+                editor.getWrapperElement().style.display = "none";
+                document.getElementById("language-select").style.display = "none";
+                document.getElementById("submit-button").style.display = "none";
+
+                // 清空当前选择的题目序号
+                document.getElementById("current-problem").value = "";
+            } else {
+                // 如果状态码不为200，表示请求失败
+                alert("请求失败：" + xhr.statusText);
+            }
+        };
+
+        // 设置请求失败时的回调函数
+        xhr.onerror = function () {
+            alert("请求出错");
+        };
+
+        // 发送请求，附上用户输入的代码
+        xhr.send(code);
+    }
+
+    // 这个函数用于根据用户选择的编程语言，改变CodeMirror编辑器的模式
+    function changeLanguage() {
+
+        // 获取网页上需要更新的元素
+        var languageSelect = document.getElementById("language-select");
+
+        // 获取用户选择的编程语言
+        var language = languageSelect.value;
+
+        // 根据用户选择的编程语言，设置CodeMirror编辑器的模式
+        editor.setOption("mode", language);
+    }
+
+    // 这个函数用于创建一个CodeMirror编辑器对象，并返回它
+    function createEditor() {
+
+        // 获取网页上需要更新的元素
+        var codeInput = document.getElementById("code-input");
+
+        // 创建一个CodeMirror编辑器对象，并设置一些选项
+        var editor = CodeMirror(codeInput, {
+            lineNumbers: true, // 显示行号
+            indentUnit: 4, // 设置缩进单位为4个空格
+            indentWithTabs: true, // 使用制表符进行缩进
+            theme: "monokai", // 设置主题为monokai
+            mode: "", // 设置初始模式为空
+            value: "" // 设置初始值为空
+        });
+
+        // 返回创建好的CodeMirror编辑器对象
+        return editor;
+    }
+
+    // 这个函数用于根据用户点击的题目序号按钮，显示或隐藏相应的CodeMirror编辑器、下拉菜单和提交按钮，并设置相应的编程语言和初始代码
+    function showProblem(problemNumber) {
+
+        // 获取网页上需要更新的元素
+        var codeInput = document.getElementById("code-input");
+        var languageSelect = document.getElementById("language-select");
+        var submitButton = document.getElementById("submit-button");
+
+        // 获取当前选择的题目序号，如果有的话
+        var currentProblem = document.getElementById("current-problem").value;
+
+        // 如果当前没有选择任何题目，或者选择了不同的题目，就更新界面
+        if (currentProblem === "" || currentProblem !== problemNumber) {
+
+            // 显示CodeMirror编辑器、下拉菜单和提交按钮
+            editor.getWrapperElement().style.display = "block";
+            languageSelect.style.display = "block";
+            submitButton.style.display = "block";
+
+            // 根据题目序号，设置编程语言和初始代码（这里只是举例，你可以根据你自己的需求来设置）
+            switch (problemNumber) {
+                case 1:
+                    languageSelect.value = "text/x-csrc"; // 设置编程语言为C
+                    editor.setOption("mode", "text/x-csrc"); // 设置CodeMirror编辑器的模式为C
+                    editor.setValue("#include <stdio.h>\n\nint main() {\n\t// 在这里写你的代码\n\treturn 0;\n}"); // 设置CodeMirror编辑器的初始值为C语言的模板代码
+                    break;
+                case 2:
+                    languageSelect.value = "text/x-c++src"; // 设置编程语言为C++
+                    editor.setOption("mode", "text/x-c++src"); // 设置CodeMirror编辑器的模式为C++
+                    editor.setValue("#include <iostream>\nusing namespace std;\n\nint main() {\n\t// 在这里写你的代码\n\treturn 0;\n}"); // 设置CodeMirror编辑器的初始值为C++语言的模板代码
+                    break;
+                case 3:
+                    languageSelect.value = "java"; // 设置编程语言为Java
+                    editor.setOption("mode", "java"); // 设置CodeMirror编辑器的模式为Java
+                    editor.setValue("public class Main {\n\tpublic static void main(String[] args) {\n\t\t// 在这里写你的代码\n\t}\n}"); // 设置CodeMirror编辑器的初始值为Java语言的模板代码
+                    break;
+                case 4:
+                    languageSelect.value = "python"; // 设置编程语言为Python
+                    editor.setOption("mode", "python"); // 设置CodeMirror编辑器的模式为Python
+                    editor.setValue("# 在这里写你的代码"); // 设置CodeMirror编辑器的初始值为空
+                    break;
+                case 5:
+                    languageSelect.value = ""; // 清空编程语言选择
+                    editor.setOption("mode", ""); // 清空CodeMirror编辑器的模式
+                    editor.setValue(""); // 清空CodeMirror编辑器的值
+                    break;
+                case 6:
+                    languageSelect.value = ""; // 清空编程语言选择
+                    editor.setOption("mode", ""); // 清空CodeMirror编辑器的模式
+                    editor.setValue(""); // 清空CodeMirror编辑器的值
+                    break;
+                case 7:
+                    languageSelect.value = ""; // 清空编程语言选择
+                    editor.setOption("mode", ""); // 清空CodeMirror编辑器的模式
+                    editor.setValue(""); // 清空CodeMirror编辑器的值
+                    break;
+                case 8:
+                    languageSelect.value = ""; // 清空编程语言选择
+                    editor.setOption("mode", ""); // 清空CodeMirror编辑器的模式
+                    editor.setValue(""); // 清空CodeMirror编辑器的值
+                    break;
+                default:
+                    break;
+            }
+
+            // 更新当前选择的题目序号，并添加一个隐藏的输入框元素，用于存储它（方便后面获取）
+            document.getElementById("current-problem").value = problemNumber;
+            codeInput.innerHTML += "<input type='hidden' id='current-problem' value='" + problemNumber + "'/>";
+
+            // 给提交按钮添加一个id属性，用于存储当前选择的题目序号（方便后面获取）
+            submitButton.setAttribute("id", "submit-button-" + problemNumber);
+
+            // 给每个题目序号按钮添加一个id属性，用于存储对应的题目序号（方便后面获取）
+            var problemButtons = document.getElementsByClassName("problem-link");
+            for (var i = 0; i < problemButtons.length; i++) {
+                problemButtons[i].setAttribute("id", "button-" + (i + 1));
+            }
+
+        } else {
+            // 如果当前已经选择了相同的题目，就隐藏CodeMirror编辑器、下拉菜单和提交按钮，并清空当前选择的题目序号
+
+            editor.getWrapperElement().style.display = "none";
+            languageSelect.style.display = "none";
+            submitButton.style.display = "none";
+
+            document.getElementById("current-problem").value = "";
+
+        }
+    }
+
+    // 调用创建编辑器的函数，得到一个编辑器对象，并将它赋值给一个全局变量editor，方便后面使用它
+    var editor = createEditor();
+</script>
+</body>
+</html>

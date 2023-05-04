@@ -1,0 +1,16 @@
+/* 自定义样式文件 */
+.CodeMirror {
+    font-family: "JetBrains Mono", monospace; /* 设置字体样式 */
+    font-size: 20px; /* 设置字体大小 */
+}
+
+.language-select {
+    position: relative; /* 设置相对定位 */
+    top: 10px; /* 设置距离顶部10px */
+    left: calc(50% - 50px); /* 设置距离左边为50%减去宽度的一半 */
+    width: 100px; /* 设置宽度为100px */
+}
+
+.problem-link:hover {
+    color: #ffffff; /* 设置悬停时的链接颜色为白色 */
+}
